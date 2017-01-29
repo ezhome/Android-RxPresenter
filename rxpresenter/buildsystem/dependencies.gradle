@@ -1,0 +1,40 @@
+ext {
+  // Android versions
+  androidMinSdkVersion = 16
+  androidTargetSdkVersion = 25
+  androidCompileSdkVersion = 25
+  androidBuildToolsVersion = '25.0.0'
+
+  //Android Support
+  androidSupportLibsVersion = '25.0.1'
+
+  //RxJava
+  rxJavaVersion = '1.2.5'
+  trelloLifecycleVersion = '1.0'
+
+  //Tools
+  timberVersion = '4.1.2'
+
+  //Test
+  jUnitVersion = '4.12'
+  robolectricVersion = '3.1.2'
+  assertJVersion = '1.7.1'
+  mockitoVersion = '1.9.5'
+
+  libraryDependencies = [
+      supportAppcompatV7: "com.android.support:appcompat-v7:${androidSupportLibsVersion}",
+      rxJava:             "io.reactivex:rxjava:${rxJavaVersion}",
+      trelloNavi:         "com.trello:rxlifecycle-navi:${trelloLifecycleVersion}",
+      trelloLifeCycle:    "com.trello:rxlifecycle:${trelloLifecycleVersion}",
+      trelloAndroid:      "com.trello:rxlifecycle-android:${trelloLifecycleVersion}",
+      timber:             "com.jakewharton.timber:timber:${timberVersion}",
+  ]
+
+  libraryTestDependencies = [
+      junit:              "junit:junit:${jUnitVersion}",
+      mockito:            "org.mockito:mockito-core:${mockitoVersion}",
+      assertj:            "org.assertj:assertj-core:${assertJVersion}",
+      robolectric:        "org.robolectric:robolectric:${robolectricVersion}"
+  ]
+
+}

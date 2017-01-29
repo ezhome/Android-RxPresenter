@@ -1,0 +1,9 @@
+publish {
+  userOrg = 'ezhome'
+  groupId = 'com.ezhome'
+  artifactId = 'rxpresenter'
+  publishVersion = '1.0.0'
+  autoPublish = false
+  desc = 'RxJava presenter implementation for MVP pattern which follows Android lifecycle'
+  website = 'https://github.com/ezhome/Android-RxPresenter'
+}
