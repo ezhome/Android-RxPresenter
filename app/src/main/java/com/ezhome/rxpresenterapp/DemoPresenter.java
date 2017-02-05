@@ -5,9 +5,9 @@ import com.ezhome.rxpresenter.RxPresenter;
 /**
  * A demo presenter for MVP
  */
-public class DemoPresenter extends RxPresenter<DemoView> {
+class DemoPresenter extends RxPresenter<DemoView> {
 
-  public DemoPresenter() {
+  DemoPresenter() {
   }
 
   @Override public void resume() {

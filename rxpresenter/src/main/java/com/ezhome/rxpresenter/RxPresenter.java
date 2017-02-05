@@ -219,12 +219,6 @@ public abstract class RxPresenter<V extends MvpView> implements Presenter<V> {
           }
         }));
     this.subscriptions.add(
-        RxNavi.observe(naviComponent, Event.VIEW_CREATED).subscribe(new Action1<ViewCreated>() {
-          @Override public void call(ViewCreated viewCreated) {
-            RxPresenter.this.bindView((V) fragment);
-          }
-        }));
-    this.subscriptions.add(
         RxNavi.observe(naviComponent, Event.DESTROY).subscribe(new Action1<Object>() {
           @Override public void call(final Object object) {
             RxPresenter.this.destroy();

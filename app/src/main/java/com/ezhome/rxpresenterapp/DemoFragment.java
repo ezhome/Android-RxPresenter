@@ -57,9 +57,4 @@ public class DemoFragment extends MvpFragment implements DemoView {
     this.demoPauseTxt.setText("Presenter on resume pause state");
 
   }
-
-  @Override public void renderDestroyTxt() {
-    this.demoDestroyTxt.setText("Presenter on resume destroy staate");
-
-  }
 }
