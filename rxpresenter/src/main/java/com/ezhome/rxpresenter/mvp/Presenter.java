@@ -1,5 +1,7 @@
 package com.ezhome.rxpresenter.mvp;
 
+import com.trello.navi.component.NaviActivity;
+import com.trello.navi.component.support.NaviAppCompatActivity;
 import com.trello.navi.component.support.NaviDialogFragment;
 import com.trello.navi.component.support.NaviFragment;
 
@@ -15,11 +17,18 @@ public interface Presenter<V extends MvpView> {
   void bind(NaviFragment fragment);
 
   /**
-   * Binds a fragment to proper lifecycle
+   * Binds a dialog fragment to proper lifecycle
    *
-   * @param dialogFragment {@link NaviDialogFragment}
+   * @param fragment {@link NaviDialogFragment}
    */
-  void bind(NaviDialogFragment dialogFragment);
+  void bind(NaviDialogFragment fragment);
+
+  /**
+   * Binds a activity to proper lifecycle
+   *
+   * @param activity {@link NaviActivity}
+   */
+  void bind(NaviAppCompatActivity activity);
 
   /**
    * Method that control the lifecycle of the view.

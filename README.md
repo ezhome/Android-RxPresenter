@@ -19,7 +19,25 @@ Contents
 Usage
 -----
 
-*NOTE: Currently supports only `Fragment` and `DialogFragment`*
+This library supports only the support `AppCompatActivity`, `Fragment` and `DialogFragment`. In order to be able to use the library these
+app components must inherit one of the followings, `MvpActivity`, `MvpFragment`
+
+**Activity**
+```
+bind(activity);
+```
+
+
+**Fragment**
+```
+bind(fragment);
+```
+
+
+**Dialog Fragment**
+```
+bind(dialogFragment);
+```
 
 You need to define an interface which representing a View in a MVP pattern and there is a 1-to-1 relationship
 and two way communication between View & Presenter. In our case this interface must extends `MvpView` eg.
@@ -113,7 +131,7 @@ dependencies {
 Tests
 ----------
 
-//TDB
+//TBD
 
 Code style
 ----------

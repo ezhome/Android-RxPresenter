@@ -2,17 +2,20 @@ package com.ezhome.rxpresenter;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import com.ezhome.rxpresenter.mvp.MvpView;
 import com.ezhome.rxpresenter.mvp.Presenter;
 import com.ezhome.rxpresenter.reactive.DefaultSubscriber;
 import com.trello.navi.Event;
 import com.trello.navi.NaviComponent;
+import com.trello.navi.component.support.NaviAppCompatActivity;
 import com.trello.navi.component.support.NaviDialogFragment;
 import com.trello.navi.component.support.NaviFragment;
 import com.trello.navi.model.ViewCreated;
 import com.trello.navi.rx.RxNavi;
 import com.trello.rxlifecycle.LifecycleProvider;
 import com.trello.rxlifecycle.RxLifecycle;
+import com.trello.rxlifecycle.android.ActivityEvent;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import com.trello.rxlifecycle.navi.NaviLifecycle;
 import rx.Observable;
@@ -39,34 +42,44 @@ public abstract class RxPresenter<V extends MvpView> implements Presenter<V> {
   /**
    * {@link NaviComponent}
    */
-  protected NaviComponent naviComponent;
+  private NaviComponent naviComponent;
 
   /**
    * {@link Fragment}
    */
-  protected Fragment fragment;
+  private Fragment fragment;
+
+  /**
+   * {@link Fragment}
+   */
+  private AppCompatActivity activity;
 
   /**
    * {@link LifecycleProvider}
    */
-  protected LifecycleProvider<FragmentEvent> fragmentLifecycleProvider;
+  private LifecycleProvider lifecycleProvider;
 
   /**
    * The view which is bind with the presenter
    */
   protected V view;
 
-  @Override public void bind(NaviFragment fragment) {
+  @Override public void bind(NaviFragment naviFragment) {
     Timber.tag(getClass().getSimpleName());
-    this.fragment = fragment;
-    this.naviComponent = fragment;
+    this.naviComponent = naviFragment;
     this.initFragment();
   }
 
-  @Override public void bind(NaviDialogFragment dialogFragment) {
-    this.fragment = dialogFragment;
-    this.naviComponent = dialogFragment;
+  @Override public void bind(NaviDialogFragment naviFragment) {
+    Timber.tag(getClass().getSimpleName());
+    this.naviComponent = naviFragment;
     this.initFragment();
+  }
+
+  @Override public void bind(NaviAppCompatActivity naviActivity) {
+    Timber.tag(getClass().getSimpleName());
+    this.naviComponent = naviActivity;
+    this.initActivity();
   }
 
   @Override public void resume() {
@@ -176,10 +189,11 @@ public abstract class RxPresenter<V extends MvpView> implements Presenter<V> {
    * @param <T> any object for {@link rx.Observable}
    * @return {@link rx.Observable}
    */
+  @SuppressWarnings("unchecked")
   private <T> Observable<T> composeUntilEvent(@NonNull Observable<T> observable,
       @NonNull FragmentEvent event) {
     return observable.doOnUnsubscribe(loggingUnsub)
-        .compose(fragmentLifecycleProvider.<T>bindUntilEvent(event));
+        .compose(lifecycleProvider.<T>bindUntilEvent(event));
   }
 
   /**
@@ -189,16 +203,23 @@ public abstract class RxPresenter<V extends MvpView> implements Presenter<V> {
    * @param <T> any object for {@link rx.Observable}
    * @return {@link rx.Observable}
    */
+  @SuppressWarnings("unchecked")
   private <T> Observable<T> composeLifecycle(@NonNull Observable<T> observable) {
-    return observable.doOnUnsubscribe(loggingUnsub)
-        .compose(fragmentLifecycleProvider.<T>bindUntilEvent(FragmentEvent.DESTROY_VIEW));
+    if (fragment != null && activity == null) {
+      return observable.doOnUnsubscribe(loggingUnsub)
+          .compose(lifecycleProvider.<T>bindUntilEvent(FragmentEvent.DESTROY_VIEW));
+    } else {
+      return observable.doOnUnsubscribe(loggingUnsub)
+          .compose(lifecycleProvider.<T>bindUntilEvent(ActivityEvent.DESTROY));
+    }
   }
 
   /**
-   * Used to initialise different things in a presenter
+   * Used to follow the lifecycle and bind the view
    */
   @SuppressWarnings("unchecked") private void initFragment() {
-    this.fragmentLifecycleProvider = NaviLifecycle.createFragmentLifecycleProvider(naviComponent);
+    this.fragment = (Fragment) naviComponent;
+    this.lifecycleProvider = NaviLifecycle.createFragmentLifecycleProvider(naviComponent);
     //noinspection unchecked
     this.subscriptions.add(
         RxNavi.observe(naviComponent, Event.VIEW_CREATED).subscribe(new Action1<ViewCreated>() {
@@ -206,6 +227,29 @@ public abstract class RxPresenter<V extends MvpView> implements Presenter<V> {
             RxPresenter.this.bindView((V) fragment);
           }
         }));
+    this.initCommon();
+  }
+
+  /**
+   * Used to follow the lifecycle and bind the view
+   */
+  @SuppressWarnings("unchecked") private void initActivity() {
+    this.activity = (AppCompatActivity) naviComponent;
+    this.lifecycleProvider = NaviLifecycle.createActivityLifecycleProvider(naviComponent);
+    //noinspection unchecked
+    this.subscriptions.add(
+        RxNavi.observe(naviComponent, Event.START).subscribe(new Action1<Void>() {
+          @Override public void call(Void aVoid) {
+            RxPresenter.this.bindView((V) activity);
+          }
+        }));
+    this.initCommon();
+  }
+
+  /**
+   * Standard common lifecycle
+   */
+  private void initCommon() {
     this.subscriptions.add(
         RxNavi.observe(naviComponent, Event.RESUME).subscribe(new Action1<Void>() {
           @Override public void call(Void aVoid) {
