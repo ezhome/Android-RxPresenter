@@ -142,7 +142,7 @@ Code style used in the project is called `SquareAndroid` from Java Code Styles r
 License
 -------
 
-    Copyright 2016 Ezhome Inc.
+    Copyright 2017 Ezhome Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
