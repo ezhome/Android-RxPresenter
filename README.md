@@ -19,7 +19,7 @@ Contents
 Usage
 -----
 
-This library supports only the support `AppCompatActivity`, `Fragment` and `DialogFragment`. In order to be able to use the library these
+This library supports only the support `AppCompatActivity`, `Fragment` and `DialogFragment`. In order to be able to use the library, these
 app components must inherit one of the followings, `MvpActivity`, `MvpFragment`
 
 **Activity**
@@ -39,7 +39,7 @@ bind(fragment);
 bind(dialogFragment);
 ```
 
-You need to define an interface which representing a View in a MVP pattern and there is a 1-to-1 relationship
+Firstly you need to define an interface which representing a View in a MVP pattern and there is a 1-to-1 relationship
 and two way communication between View & Presenter. In our case this interface must extends `MvpView` eg.
 
 ```java
@@ -63,7 +63,7 @@ The corresponding android app component must implements the `View` interface! Af
 to initialise the presenter and `bind(component)` it to `Fragment` or `DialogFragment`. eg.
 
 **Without Dependency Injection**
-```
+```java
 public class DemoFragment extends MvpFragment implements DemoView {
 
   private Presenter presenter = new DemoPresenter();
@@ -77,7 +77,7 @@ public class DemoFragment extends MvpFragment implements DemoView {
 
 
 **With Dependency Injection - Dagger2**
-```
+```java
 public class DemoFragment extends MvpFragment implements DemoView {
 
   @Inject Presenter presenter;
