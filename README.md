@@ -48,7 +48,7 @@ interface DemoView extends MvpView {
 }
 ```
 
-Then you need to create a Presenter in the MVP pattern. In this librady the Presenter must extend `RxPresenter<V>`
+Then you need to create a Presenter in the MVP pattern. In this library the Presenter must extend `RxPresenter<V>`
 where `V` is the `View` interface which we defined above. eg.
 
 ```java
@@ -124,7 +124,7 @@ Download
 The project is available on jCenter. In your app build.gradle (or explicit module) you must add this:
 ```
 dependencies {
-  compile 'com.ezhome:rxpresenter:1.0.0'
+  compile 'com.ezhome:rxpresenter:1.1.0'
 }
 ```
 
