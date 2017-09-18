@@ -19,10 +19,13 @@ import com.trello.rxlifecycle.android.ActivityEvent;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import com.trello.rxlifecycle.navi.NaviLifecycle;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
@@ -120,9 +123,29 @@ public abstract class RxPresenter<V extends MvpView> implements Presenter<V> {
       throw new IllegalArgumentException("You can pass only one Subscriber<T>");
     }
     if (subscribers.length == 0) {
-      return composeLifecycle(observable).subscribe(new DefaultSubscriber<T>());
+      return composeLifecycle(observable, Schedulers.io()).subscribe(new DefaultSubscriber<T>());
     }
-    return composeLifecycle(observable).subscribe(subscribers[0]);
+    return composeLifecycle(observable, Schedulers.io()).subscribe(subscribers[0]);
+  }
+
+  /**
+   * Executes an observable subscription based on {@link RxLifecycle}
+   * {@link LifecycleProvider}
+   *
+   * @param <T> any object for {@link rx.Observable}
+   * @param subscribers [OPTIONAL] {@link rx.Subscriber} custom subscriber
+   * @param scheduler the scheduler to run the stream
+   * @return {@link Subscription}
+   */
+  @SafeVarargs protected final <T> Subscription bindLifecycle(@NonNull Observable<T> observable,
+      Scheduler scheduler, Subscriber<T>... subscribers) {
+    if (subscribers.length > 1) {
+      throw new IllegalArgumentException("You can pass only one Subscriber<T>");
+    }
+    if (subscribers.length == 0) {
+      return composeLifecycle(observable, scheduler).subscribe(new DefaultSubscriber<T>());
+    }
+    return composeLifecycle(observable, scheduler).subscribe(subscribers[0]);
   }
 
   /**
@@ -139,7 +162,7 @@ public abstract class RxPresenter<V extends MvpView> implements Presenter<V> {
     if (action == null) {
       return bindLifecycle(observable);
     }
-    return composeLifecycle(observable).subscribe(action);
+    return composeLifecycle(observable, Schedulers.io()).subscribe(action);
   }
 
   /**
@@ -204,14 +227,30 @@ public abstract class RxPresenter<V extends MvpView> implements Presenter<V> {
    * @return {@link rx.Observable}
    */
   @SuppressWarnings("unchecked")
-  private <T> Observable<T> composeLifecycle(@NonNull Observable<T> observable) {
+  private <T> Observable<T> composeLifecycle(@NonNull Observable<T> observable, Scheduler scheduler) {
     if (fragment != null && activity == null) {
       return observable.doOnUnsubscribe(loggingUnsub)
+          .compose(applySchedulers(scheduler))
           .compose(lifecycleProvider.<T>bindUntilEvent(FragmentEvent.DESTROY_VIEW));
     } else {
       return observable.doOnUnsubscribe(loggingUnsub)
+          .compose(applySchedulers(scheduler))
           .compose(lifecycleProvider.<T>bindUntilEvent(ActivityEvent.DESTROY));
     }
+  }
+
+  /**
+   * We are using RxJava transformers to compose the observables in order
+   * to not break the chain and help in the UI to do process and avoid
+   * lagging
+   */
+  private <T> Observable.Transformer<T, T> applySchedulers(final Scheduler scheduler) {
+    return new Observable.Transformer<T, T>() {
+      @Override public Observable<T> call(Observable<T> observable) {
+        return observable.subscribeOn(scheduler)
+            .observeOn(AndroidSchedulers.mainThread());
+      }
+    };
   }
 
   /**
