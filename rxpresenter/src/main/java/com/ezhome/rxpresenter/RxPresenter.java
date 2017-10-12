@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.ezhome.rxpresenter.mvp.MvpView;
 import com.ezhome.rxpresenter.mvp.Presenter;
 import com.ezhome.rxpresenter.reactive.DefaultSubscriber;
+import com.ezhome.rxpresenter.reactive.RxPresenterTransformer;
+import com.ezhome.rxpresenter.reactive.RxDefaultTransformer;
 import com.trello.navi.Event;
 import com.trello.navi.NaviComponent;
 import com.trello.navi.component.support.NaviAppCompatActivity;
@@ -66,7 +68,12 @@ public abstract class RxPresenter<V extends MvpView> implements Presenter<V> {
    * The view which is bind with the presenter
    */
   protected V view;
-
+	
+  /**
+   * The default transformer, exposed for tests
+   */
+  public RxPresenterTransformer rxTransformer = new RxDefaultTransformer();
+	
   @Override public void bind(NaviFragment naviFragment) {
     Timber.tag(getClass().getSimpleName());
     this.naviComponent = naviFragment;
@@ -230,27 +237,15 @@ public abstract class RxPresenter<V extends MvpView> implements Presenter<V> {
   private <T> Observable<T> composeLifecycle(@NonNull Observable<T> observable, Scheduler scheduler) {
     if (fragment != null && activity == null) {
       return observable.doOnUnsubscribe(loggingUnsub)
-          .compose(applySchedulers(scheduler))
+	        .compose(rxTransformer.subscribeOn(scheduler))
+	        .compose(rxTransformer.observeOnMain())
           .compose(lifecycleProvider.<T>bindUntilEvent(FragmentEvent.DESTROY_VIEW));
     } else {
       return observable.doOnUnsubscribe(loggingUnsub)
-          .compose(applySchedulers(scheduler))
+	        .compose(rxTransformer.subscribeOn(scheduler))
+	        .compose(rxTransformer.observeOnMain())
           .compose(lifecycleProvider.<T>bindUntilEvent(ActivityEvent.DESTROY));
     }
-  }
-
-  /**
-   * We are using RxJava transformers to compose the observables in order
-   * to not break the chain and help in the UI to do process and avoid
-   * lagging
-   */
-  private <T> Observable.Transformer<T, T> applySchedulers(final Scheduler scheduler) {
-    return new Observable.Transformer<T, T>() {
-      @Override public Observable<T> call(Observable<T> observable) {
-        return observable.subscribeOn(scheduler)
-            .observeOn(AndroidSchedulers.mainThread());
-      }
-    };
   }
 
   /**
