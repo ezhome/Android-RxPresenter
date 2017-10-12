@@ -124,7 +124,7 @@ Download
 The project is available on jCenter. In your app build.gradle (or explicit module) you must add this:
 ```
 dependencies {
-  compile 'com.ezhome:rxpresenter:1.0.0'
+  compile 'com.ezhome:rxpresenter:1.2.1'
 }
 ```
 
