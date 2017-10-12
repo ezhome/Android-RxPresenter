@@ -104,7 +104,7 @@ public abstract class RxPresenter<V extends MvpView> implements Presenter<V> {
    *
    * @param mpvView {@link MvpView}
    */
-  void bindView(@NonNull V mpvView) {
+  public void bindView(@NonNull V mpvView) {
     this.view = mpvView;
   }
 
