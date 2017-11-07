@@ -26,9 +26,16 @@ public interface Presenter<V extends MvpView> {
   /**
    * Binds a activity to proper lifecycle
    *
-   * @param activity {@link NaviActivity}
+   * @param activity {@link NaviAppCompatActivity}
    */
   void bind(NaviAppCompatActivity activity);
+
+  /**
+   * Binds a activity to proper lifecycle
+   *
+   * @param activity {@link NaviActivity}
+   */
+  void bind(NaviActivity activity);
 
   /**
    * Method that control the lifecycle of the view.

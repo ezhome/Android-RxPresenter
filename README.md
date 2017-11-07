@@ -5,7 +5,7 @@
 # RxPresenter
 
 A Reactive Presenter library for MV**P** pattern for modern Android Apps. This library follows the
-lifecycle of an android app component (`Fragment`, `DialogFragment`). Specifically relies on [RxLifecycle](https://github.com/trello/RxLifecycle) by Trello.
+lifecycle of an android app component (`Activity`,`AppCompatActivity`,`Fragment`, `DialogFragment`). Specifically relies on [RxLifecycle](https://github.com/trello/RxLifecycle) by Trello.
 
 ----
 Contents
@@ -19,7 +19,7 @@ Contents
 Usage
 -----
 
-This library supports only the support `AppCompatActivity`, `Fragment` and `DialogFragment`. In order to be able to use the library, these
+This library supports only the support `Activity`,`AppCompatActivity`, `Fragment` and `DialogFragment`. In order to be able to use the library, these
 app components must inherit one of the followings, `MvpActivity`, `MvpFragment`
 
 **Activity**
@@ -131,7 +131,9 @@ dependencies {
 Tests
 ----------
 
-//TBD
+```
+./gradlew :rxpresenter:test
+```
 
 Code style
 ----------
