@@ -124,7 +124,11 @@ Download
 The project is available on jCenter. In your app build.gradle (or explicit module) you must add this:
 ```
 dependencies {
+  //java
   compile 'com.ezhome:rxpresenter:1.3.0'
+
+  //kotlin
+  compile 'com.ezhome:rxpresenter-kotlin:1.3.0'
 }
 ```
 

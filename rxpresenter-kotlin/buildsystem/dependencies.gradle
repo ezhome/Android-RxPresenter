@@ -8,6 +8,9 @@ ext {
   //Android Support
   androidSupportLibsVersion = '26.1.0'
 
+  //kotlin
+  kotlinVersion = '1.2.0'
+
   //RxJava
   rxJavaVersion = '1.3.4'
   trelloLifecycleVersion = '1.0'
@@ -25,9 +28,10 @@ ext {
       supportAppcompatV7: "com.android.support:appcompat-v7:${androidSupportLibsVersion}",
       rxJava:             "io.reactivex:rxjava:${rxJavaVersion}",
       trelloNavi:         "com.trello:rxlifecycle-navi:${trelloLifecycleVersion}",
-      trelloLifeCycle:    "com.trello:rxlifecycle:${trelloLifecycleVersion}",
+      trelloLifeCycle:    "com.trello:rxlifecycle-kotlin:${trelloLifecycleVersion}",
       trelloAndroid:      "com.trello:rxlifecycle-android:${trelloLifecycleVersion}",
       timber:             "com.jakewharton.timber:timber:${timberVersion}",
+      kotlinJre:          "org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}",
   ]
 
   libraryTestDependencies = [

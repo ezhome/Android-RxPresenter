@@ -1,1 +1,1 @@
-include ':app', ':rxpresenter'
+include ':app', ':rxpresenter', ':rxpresenter-kotlin'

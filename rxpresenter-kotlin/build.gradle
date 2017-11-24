@@ -7,8 +7,10 @@ buildscript {
   }
 }
 
+
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'kotlin-android'
 apply from: 'buildsystem/dependencies.gradle'
 apply from: 'buildsystem/version.gradle'
 apply from: 'buildsystem/publish.gradle'
@@ -44,6 +46,11 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+
+  sourceSets {
+    main.java.srcDirs += 'src/main/kotlin'
+    test.java.srcDirs += 'src/test/kotlin'
+  }
 }
 
 tasks.withType(Test) {
@@ -62,6 +69,9 @@ dependencies {
   //Lifecycle
   api libraryDependencies.trelloNavi
   implementation libraryDependencies.trelloLifeCycle
+
+  //kotlin
+  implementation libraryDependencies.kotlinJre
 
   //Rx
   implementation libraryDependencies.rxJava
