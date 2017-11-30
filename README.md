@@ -1,6 +1,8 @@
 [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Platform](https://img.shields.io/badge/platform-android-green.svg)](http://developer.android.com/index.html)
-[ ![Download](https://api.bintray.com/packages/ezhome/maven/rxpresenter/images/download.svg) ](https://bintray.com/ezhome/maven/rxpresenter/_latestVersion)
+[![Download](https://api.bintray.com/packages/ezhome/maven/rxpresenter/images/download.svg) ](https://bintray.com/ezhome/maven/rxpresenter/_latestVersion)
+[![Build Status](https://travis-ci.org/ezhome/Android-RxPresenter.svg?branch=master)](https://travis-ci.org/ezhome/Android-RxPresenter)
+[![Android Arsenal]( https://img.shields.io/badge/Android%20Arsenal-Spiros%20Economakis-green.svg?style=flat )]( https://android-arsenal.com/details/1/6457 )
 
 # RxPresenter
 
